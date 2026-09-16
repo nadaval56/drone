@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>דוח בדיקה תרמית לדוגמה | סולארסקאן</title>
+  <meta name="description" content="דוח בדיקה תרמית לדוגמה של מערכת סולארית: סיכום מנהלים, מפת אנומליות, טבלת ממצאים לפי פאנל והמלצות.">
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1F3A'/%3E%3Crect x='12' y='14' width='40' height='36' rx='4' fill='%231E5A8E'/%3E%3Crect x='30' y='30' width='9' height='9' fill='%23F97316'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/report.css">
+</head>
+<body>
+
+  <div class="toolbar">
+    <a href="index.html" class="toolbar__back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      חזרה לאתר
+    </a>
+    <span class="toolbar__note">דוח לדוגמה. הנתונים מומצאים לצורך הדגמת המבנה.</span>
+    <button type="button" class="toolbar__print" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7"/></svg>
+      הדפסה / שמירה כ-PDF
+    </button>
+  </div>
+
+  <main class="doc" id="doc">
+
+    <!-- ===== Cover ===== -->
+    <header class="cover page">
+      <div class="cover__brand">
+        <span class="cover__mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="none"><rect x="3" y="6" width="34" height="28" rx="4" stroke="currentColor" stroke-width="2"/><path d="M3 15h34M3 25h34M14 6v28M26 6v28" stroke="currentColor" stroke-width="1.5" opacity=".6"/><rect x="15" y="16" width="10" height="8" fill="#F97316"/></svg>
+        </span>
+        <span>סולארסקאן · בדיקות תרמיות למערכות סולאריות</span>
+      </div>
+      <p class="cover__kicker">דוח בדיקה תרמית ברחפן</p>
+      <h1 class="cover__title" data-field="site.name"></h1>
+      <p class="cover__sub"><span data-field="site.address"></span> · <span data-field="site.kwp"></span> קילוואט · <span data-field="site.modules"></span> פאנלים</p>
+
+      <dl class="meta">
+        <div><dt>לקוח</dt><dd data-field="client.name"></dd></div>
+        <div><dt>איש קשר</dt><dd data-field="client.contact"></dd></div>
+        <div><dt>מספר דוח</dt><dd data-field="report.id"></dd></div>
+        <div><dt>תאריך בדיקה</dt><dd data-field="report.inspectionDate"></dd></div>
+        <div><dt>תאריך דוח</dt><dd data-field="report.reportDate"></dd></div>
+        <div><dt>סוג בדיקה</dt><dd data-field="report.type"></dd></div>
+        <div><dt>מטיס / בודק</dt><dd data-field="report.inspector"></dd></div>
+        <div><dt>רישיון</dt><dd data-field="report.license"></dd></div>
+        <div><dt>ציוד</dt><dd data-field="report.equipment"></dd></div>
+        <div><dt>מתודולוגיה</dt><dd data-field="report.standard"></dd></div>
+      </dl>
+    </header>
+
+    <!-- ===== Executive summary ===== -->
+    <section class="page">
+      <h2 class="h2"><span class="num">1</span>סיכום מנהלים</h2>
+
+      <div class="kpis" id="kpis"></div>
+
+      <div class="severity-bar" id="severityBar"></div>
+
+      <div class="summary-grid">
+        <div class="box">
+          <h3>מה מצאנו</h3>
+          <p data-field="summary.text"></p>
+        </div>
+        <div class="box box--accent">
+          <h3>שלוש הפעולות החשובות</h3>
+          <ol class="top-actions" id="topActions"></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Conditions ===== -->
+    <section class="page">
+      <h2 class="h2"><span class="num">2</span>תנאי הבדיקה</h2>
+      <p class="lead">בדיקה תרמית תקפה רק בתנאים מתאימים. הטבלה מתעדת את תנאי הצילום בפועל מול הדרישות, כדי שהדוח יוכל לשמש מול יצרן, מתקין או מבטח.</p>
+      <table class="table table--conditions" id="conditionsTable">
+        <thead><tr><th>פרמטר</th><th>נמדד</th><th>דרישה</th><th>עומד</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- ===== Map ===== -->
+    <section class="page">
+      <h2 class="h2"><span class="num">3</span>מפת אנומליות</h2>
+      <p class="lead">כל ריבוע הוא פאנל. השורות מסודרות לפי סטרינגים ומהפכים כפי שסומנו בתוכנית החשמל של האתר. המספרים מפנים לטבלת הממצאים.</p>
+      <div class="map-wrap">
+        <svg id="map" class="map" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <div class="legend">
+        <span><i class="dot dot--high"></i>חומרה גבוהה</span>
+        <span><i class="dot dot--mid"></i>בינונית</span>
+        <span><i class="dot dot--low"></i>נמוכה</span>
+        <span><i class="dot dot--string"></i>סטרינג מנותק</span>
+        <span><i class="dot dot--ok"></i>תקין</span>
+      </div>
+    </section>
+
+    <!-- ===== Findings table ===== -->
+    <section class="page">
+      <h2 class="h2"><span class="num">4</span>טבלת ממצאים</h2>
+      <p class="lead">ממוין לפי חומרה. ΔT הוא הפרש הטמפרטורה בין האזור החם לפאנלים תקינים סמוכים באותו רגע צילום.</p>
+      <div class="table-scroll">
+        <table class="table table--findings" id="findingsTable">
+          <thead>
+            <tr><th>#</th><th>סוג</th><th>מהפך</th><th>סטרינג</th><th>פאנל</th><th>ΔT</th><th>חומרה</th><th>אובדן משוער</th><th>המלצה</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== Detailed findings ===== -->
+    <section class="page">
+      <h2 class="h2"><span class="num">5</span>פירוט ממצאים</h2>
+      <p class="lead">לכל ממצא: תמונה תרמית (פלטת Ironbow), תמונה רגילה מהזום לאימות, ותיאור.</p>
+      <div class="findings" id="findings"></div>
+    </section>
+
+    <!-- ===== Method & classification ===== -->
+    <section class="page">
+      <h2 class="h2"><span class="num">6</span>מתודולוגיה וסיווג חומרה</h2>
+      <div class="summary-grid">
+        <div class="box">
+          <h3>איך נעשתה הבדיקה</h3>
+          <ul class="bullets">
+            <li>טיסה אוטומטית במסלול מתוכנן מראש, כיסוי מלא של כל הפאנלים בחפיפה של 70% לפחות.</li>
+            <li>צילום תרמי רדיומטרי, כך שכל פיקסל נושא ערך טמפרטורה וניתן לניתוח לאחר הטיסה.</li>
+            <li>זווית צילום של 20 עד 40 מעלות מהניצב לפאנל, למניעת השתקפות שמיים.</li>
+            <li>כל אנומליה תרמית אומתה בצילום זום חזותי מאותה טיסה.</li>
+            <li>מיקום כל ממצא נקבע לפי תוכנית הסטרינגים שסופקה על ידי הלקוח.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>סיווג חומרה</h3>
+          <table class="table table--compact">
+            <thead><tr><th>רמה</th><th>קריטריון</th><th>טיפול</th></tr></thead>
+            <tbody>
+              <tr><td><span class="sev sev--high">גבוהה</span></td><td>ΔT מעל 20°, סטרינג או פאנל מנותק, סיכון בטיחותי</td><td>תוך 30 יום</td></tr>
+              <tr><td><span class="sev sev--mid">בינונית</span></td><td>ΔT בין 10° ל-20°, אובדן הספק מדיד</td><td>בתחזוקה הקרובה</td></tr>
+              <tr><td><span class="sev sev--low">נמוכה</span></td><td>ΔT מתחת ל-10°, לכלוך או הצללה</td><td>מעקב בבדיקה הבאה</td></tr>
+            </tbody>
+          </table>
+          <p class="small">הסיווג מבוסס על הפרש טמפרטורה ועל אובדן ההספק המשוער, בהתאם לעקרונות IEC TS 62446-3. הערכת אובדן ההספק היא אומדן ואינה תחליף למדידה חשמלית.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Recommendations ===== -->
+    <section class="page">
+      <h2 class="h2"><span class="num">7</span>המלצות לפי עדיפות</h2>
+      <ol class="recs" id="recs"></ol>
+
+      <div class="signoff">
+        <div>
+          <strong data-field="report.inspector"></strong>
+          <span data-field="report.license"></span>
+          <span>סולארסקאן · <span data-field="report.reportDate"></span></span>
+        </div>
+        <p class="small">
+          הדוח מתאר את מצב המערכת במועד הבדיקה בלבד, בתנאי הצילום המתועדים. אומדני אובדן ההספק והעלות מבוססים על הנחות המופיעות בדוח ואינם מהווים מדידה חשמלית. הדוח אינו מחליף בדיקת חשמלאי מוסמך.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/report.js"></script>
+</body>
+</html>

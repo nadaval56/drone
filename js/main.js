@@ -1,11 +1,12 @@
 /* =========================================================
-   מעוף | Drone Photography — Interactions
+   סולארסקאן | Solar Thermal Inspection — Interactions
    ========================================================= */
 (function () {
   'use strict';
 
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+  const fmt = (n, digits = 0) => Number(n).toLocaleString('he-IL', { maximumFractionDigits: digits });
 
   /* ---------- Sticky nav ---------- */
   const nav = $('#nav');
@@ -45,31 +46,44 @@
     reveals.forEach((el) => el.classList.add('is-visible'));
   }
 
-  /* ---------- Animated counters ---------- */
-  const counters = $$('.stat__num[data-count]');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const animateCount = (el) => {
-    const target = Number(el.dataset.count) || 0;
-    if (reduceMotion) { el.textContent = target.toLocaleString('he-IL'); return; }
-    const duration = 1600;
-    const start = performance.now();
-    const step = (now) => {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
-      el.textContent = Math.round(target * eased).toLocaleString('he-IL');
-      if (t < 1) requestAnimationFrame(step);
+  /* ---------- Loss calculator ---------- */
+  /*
+    הנחות (ניתנות לשינוי):
+    YIELD_KWH_PER_KWP: תפוקה שנתית אופיינית בישראל לקילוואט מותקן.
+    MODULE_KW: הספק פאנל ממוצע במערכות חדשות, לחישוב מספר הפאנלים המשוער.
+  */
+  const YIELD_KWH_PER_KWP = 1650;
+  const MODULE_KW = 0.55;
+
+  const calcKw = $('#calcKw');
+  const calcTariff = $('#calcTariff');
+  const calcLoss = $('#calcLoss');
+  if (calcKw && calcTariff && calcLoss) {
+    const out = {
+      lossLabel: $('#calcLossLabel'),
+      kwh: $('#calcKwh'),
+      money: $('#calcMoney'),
+      yieldEl: $('#calcYield'),
+      kwEcho: $('#calcKwEcho'),
+      modules: $('#calcModules'),
     };
-    requestAnimationFrame(step);
-  };
-  if ('IntersectionObserver' in window && counters.length) {
-    const cio = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) { animateCount(entry.target); cio.unobserve(entry.target); }
-      });
-    }, { threshold: 0.5 });
-    counters.forEach((el) => cio.observe(el));
-  } else {
-    counters.forEach(animateCount);
+    out.yieldEl.textContent = fmt(YIELD_KWH_PER_KWP);
+
+    const update = () => {
+      const kw = Math.max(0, Number(calcKw.value) || 0);
+      const tariff = Math.max(0, Number(calcTariff.value) || 0);
+      const lossPct = Number(calcLoss.value) || 0;
+      const lostKwh = kw * YIELD_KWH_PER_KWP * (lossPct / 100);
+      const lostMoney = lostKwh * tariff;
+
+      out.lossLabel.textContent = fmt(lossPct, 1) + '%';
+      out.kwh.textContent = fmt(lostKwh);
+      out.money.textContent = '₪' + fmt(lostMoney);
+      out.kwEcho.textContent = fmt(kw);
+      out.modules.textContent = fmt(Math.round(kw / MODULE_KW / 10) * 10);
+    };
+    [calcKw, calcTariff, calcLoss].forEach((el) => el.addEventListener('input', update));
+    update();
   }
 
   /* ---------- Package pre-select ---------- */
@@ -104,11 +118,13 @@
          גם באתר סטטי לגמרי.
          ------------------------------------------------------------- */
       const lines = [
-        'היי, אשמח לקבל הצעת מחיר לצילום רחפן.',
+        'היי, אשמח לקבל הצעת מחיר לבדיקה תרמית של מערכת סולארית.',
         `שם: ${data.name}`,
         `טלפון: ${data.phone}`,
         data.email ? `אימייל: ${data.email}` : null,
-        `סוג צילום: ${data.type}`,
+        `סוג המערכת: ${data.type}`,
+        data.kw ? `גודל: ${data.kw} קילוואט` : null,
+        data.reason ? `סיבת הבדיקה: ${data.reason}` : null,
         data.package ? `חבילה: ${data.package}` : null,
         data.message ? `פרטים: ${data.message}` : null,
       ].filter(Boolean);
