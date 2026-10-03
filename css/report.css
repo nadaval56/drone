@@ -90,7 +90,7 @@ svg { display: block; max-width: 100%; }
 
 /* ---------- Map ---------- */
 .map-wrap { background: var(--soft); border: 1px solid var(--line); border-radius: 10px; padding: 1rem; overflow-x: auto; }
-.map { width: 100%; height: auto; min-width: 480px; font-family: inherit; }
+.map { display: block; width: 100%; height: auto; min-width: 480px; font-family: inherit; direction: ltr; }
 .map__mod { fill: #CBD5E1; stroke: #fff; stroke-width: .6; }
 .map__mod--high { fill: var(--high); } .map__mod--mid { fill: var(--mid); } .map__mod--low { fill: var(--low); } .map__mod--string { fill: var(--string); }
 .map__stringbox { fill: none; stroke: var(--string); stroke-width: 1; stroke-dasharray: 3 2; }

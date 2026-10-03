@@ -214,6 +214,10 @@
     });
     const svg = $('#map');
     svg.setAttribute('viewBox', `0 0 ${width} ${y}`);
+    /* מידות מפורשות: בלעדיהן Safari ב-iOS מציג SVG ריק או בגובה 0 */
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', y);
+    svg.setAttribute('preserveAspectRatio', 'xMidYMin meet');
     svg.innerHTML = parts.join('');
   })();
 
